@@ -1,0 +1,33 @@
+name: 每日红利数据自动更新
+
+on:
+  schedule:
+    - cron: '0 10 * * 1-5' # 北京时间每天 18:00 运行
+  workflow_dispatch:      # 允许你手动点击运行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 安装依赖库
+        [cite_start]run: pip install tushare pandas numpy [cite: 22]
+
+      - name: 执行选股与 ERP 计算脚本
+        env:
+          TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        [cite_start]run: python insurance_strategy_tushare.py --token $TUSHARE_TOKEN [cite: 27]
+
+      - name: 提交并推送更新后的数据
+        run: |
+          git config --global user.name "GitHub-Actions-Bot"
+          git config --global user.email "bot@github.com"
+          git add data/*.json [cite: 23]
+          git commit -m "自动更新数据: $(date)" || exit 0
+          git push
