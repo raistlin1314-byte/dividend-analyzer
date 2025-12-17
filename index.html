@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>险资红利策略 ERP 分析</title>
     
-    <script crossorigin src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/recharts@2.12.0/umd/Recharts.js"></script>
-    <script crossorigin src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <script crossorigin src="https://cdn.staticfile.org/react/18.2.0/umd/react.production.min.js"></script>
+    <script crossorigin src="https://cdn.staticfile.org/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://cdn.staticfile.org/recharts/2.10.3/Recharts.min.js"></script>
+    <script crossorigin src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
@@ -29,14 +29,13 @@
             <div style="font-size: 48px; margin-bottom: 20px;">⚠️</div>
             <h2 style="color: #dc2626; margin-bottom: 10px; font-size: 20px; font-weight: bold;">发生错误</h2>
             <p id="error-message" style="color: #4b5563; font-family: monospace; background: #f3f4f6; padding: 15px; border-radius: 6px; word-break: break-all; text-align: left;"></p>
-            <p style="margin-top: 20px; font-size: 14px; color: #6b7280;">提示：如果显示 "Script error" 或网络错误，请尝试连接手机热点。</p>
         </div>
     </div>
 
     <div id="root">
         <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
             <div class="loading-spinner"></div>
-            <p style="margin-top: 15px; color: #64748b;">正在初始化分析引擎...</p>
+            <p style="margin-top: 15px; color: #64748b;">正在从国内镜像源加载组件...</p>
         </div>
     </div>
 
@@ -50,22 +49,14 @@
             console.error(msg);
         }
 
-        window.onerror = function(message, source, lineno, colno, error) {
-            const errorMsg = error ? error.stack : message;
-            showError(`运行时错误: ${message}\n(行 ${lineno})`);
-            return true;
-        };
-
-        // 预检：确保库已加载
         window.onload = function() {
-            if (!window.React) showError("React 库加载失败，请检查网络连接。");
-            if (!window.ReactDOM) showError("ReactDOM 库加载失败。");
-            if (!window.Recharts) showError("Recharts 图表库加载失败。");
+            // 二次检查：确保关键库已就位
+            if (!window.React) return showError("React 加载失败。请检查网络或尝试刷新。");
+            if (!window.Recharts) return showError("Recharts 加载失败。请检查网络或尝试刷新。");
         };
     </script>
 
     <script type="text/babel">
-        // 安全获取变量，防止解构失败
         const React = window.React;
         const { useState, useEffect, useMemo } = React;
         const Recharts = window.Recharts;
@@ -80,9 +71,11 @@
             useEffect(() => {
                 const loadData = async () => {
                     try {
+                        // 使用时间戳防止缓存
+                        const ts = new Date().getTime();
                         const [poolRes, erpRes] = await Promise.all([
-                            fetch('./data/stock_pool.json'),
-                            fetch('./data/erp_data.json')
+                            fetch(`./data/stock_pool.json?t=${ts}`),
+                            fetch(`./data/erp_data.json?t=${ts}`)
                         ]);
 
                         if (!poolRes.ok) throw new Error(`stock_pool.json 读取失败 (${poolRes.status})`);
@@ -91,9 +84,8 @@
                         const poolData = await poolRes.json();
                         const erpData = await erpRes.json();
                         
-                        // 数据校验
                         if (!poolData.stocks || !erpData.stocks) {
-                            throw new Error("JSON 数据格式不正确：缺少 'stocks' 字段");
+                            throw new Error("JSON 数据格式异常");
                         }
 
                         setData({ pool: poolData.stocks, erp: erpData.stocks });
@@ -112,7 +104,6 @@
             const chartData = useMemo(() => {
                 if (!selectedStock || !data.erp[selectedStock]) return [];
                 const stock = data.erp[selectedStock];
-                // 防御性编程：检查 rolling_stats 是否存在
                 if (!stock.rolling_stats || !stock.rolling_stats[period]) return [];
                 
                 const stats = stock.rolling_stats[period];
@@ -125,18 +116,17 @@
                 }));
             }, [data, selectedStock, period]);
 
-            if (loading) return null; // Loading 由 HTML 处理
+            if (loading) return null;
 
             return (
                 <div className="max-w-7xl mx-auto p-4 md:p-6 min-h-screen">
-                    {/* 头部 */}
                     <header className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                         <div>
                             <h1 className="text-2xl font-bold text-slate-800">
                                 🛡️ 险资红利策略 <span className="text-blue-600">ERP 分析</span>
                             </h1>
                             <p className="text-sm text-slate-500 mt-1">
-                                已筛选 {data.pool.length} 只高股息标的
+                                数据源：Tushare Pro | 标的数量：{data.pool.length}
                             </p>
                         </div>
                         <div className="flex bg-white rounded-lg border p-1 shadow-sm">
@@ -157,10 +147,9 @@
                     </header>
 
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                        {/* 左侧列表 */}
                         <div className="lg:col-span-1 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col h-[600px]">
                             <div className="p-3 bg-slate-50 border-b font-medium text-sm text-slate-700">
-                                股票池列表
+                                股票池 ({data.pool.length})
                             </div>
                             <div className="flex-1 overflow-y-auto">
                                 {data.pool.map(stock => (
@@ -177,21 +166,17 @@
                                         </div>
                                         <div className="flex justify-between text-xs text-slate-400 mt-1">
                                             <span>{stock.ts_code}</span>
-                                            <span>市值: {(stock.total_mv/10000).toFixed(0)}亿</span>
+                                            <span>{(stock.total_mv/10000).toFixed(0)}亿</span>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
-                        {/* 右侧图表 */}
                         <div className="lg:col-span-3 bg-white rounded-xl shadow-sm border border-slate-200 p-4 h-[600px] flex flex-col">
                             <div className="mb-4 flex justify-between items-center">
                                 <h3 className="font-bold text-slate-700">
-                                    ERP 滚动标准差通道 
-                                    {selectedStock && <span className="ml-2 text-sm font-normal text-slate-400">
-                                        ({data.pool.find(s=>s.ts_code === selectedStock)?.name})
-                                    </span>}
+                                    {selectedStock && data.pool.find(s=>s.ts_code === selectedStock)?.name} - ERP 波动区间
                                 </h3>
                             </div>
                             
@@ -214,18 +199,18 @@
                                         />
                                         <Legend verticalAlign="top" height={36} />
 
-                                        <Area type="monotone" dataKey="p2" stackId="2" stroke="none" fill="#fee2e2" fillOpacity={0.5} name="+2σ (警戒区)" />
-                                        <Area type="monotone" dataKey="m2" stackId="3" stroke="none" fill="#fee2e2" fillOpacity={0.5} name="-2σ (机会区)" />
+                                        <Area type="monotone" dataKey="p2" stackId="2" stroke="none" fill="#fee2e2" fillOpacity={0.5} name="+2σ (警戒)" />
+                                        <Area type="monotone" dataKey="m2" stackId="3" stroke="none" fill="#fee2e2" fillOpacity={0.5} name="-2σ (机会)" />
                                         <Area type="monotone" dataKey="p1" stackId="4" stroke="none" fill="#ffedd5" fillOpacity={0.6} name="+1σ" />
                                         <Area type="monotone" dataKey="m1" stackId="5" stroke="none" fill="#ffedd5" fillOpacity={0.6} name="-1σ" />
                                         
-                                        <Line type="monotone" dataKey="mean" stroke="#94a3b8" strokeDasharray="5 5" dot={false} strokeWidth={1.5} name="历史均值" />
+                                        <Line type="monotone" dataKey="mean" stroke="#94a3b8" strokeDasharray="5 5" dot={false} strokeWidth={1.5} name="均值" />
                                         <Line type="monotone" dataKey="erp" stroke="#2563eb" strokeWidth={2.5} dot={false} activeDot={{r:6}} name="当前 ERP" />
                                     </ComposedChart>
                                 </ResponsiveContainer>
                             </div>
                             <div className="mt-2 text-center text-xs text-slate-400">
-                                数据更新日期: {data.pool.length > 0 ? '2025-12-18' : '-'} | ERP 越高表示性价比越高
+                                ERP = 股息率 - 无风险利率 | 处于下方红色区域(>均值-2σ)通常代表估值偏低
                             </div>
                         </div>
                     </div>
