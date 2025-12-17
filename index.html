@@ -1,127 +1,46 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>红利股 ERP 滚动分析平台</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+    <title>故障排查测试</title>
+    <style>
+        body { font-family: sans-serif; padding: 40px; text-align: center; }
+        .success { color: green; font-weight: bold; font-size: 24px; }
+        .error { color: red; font-weight: bold; }
+        .box { border: 1px solid #ccc; padding: 20px; margin: 20px auto; max-width: 600px; background: #f9f9f9; }
+    </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
-    <div id="root">
-        <div class="flex items-center justify-center h-screen text-gray-400">正在初始化界面，请稍候... (如果长时间在此页面，请检查网络连接)</div>
+<body>
+    <h1>GitHub Pages 连通性测试</h1>
+    
+    <div class="box">
+        <p>1. 基础网页显示：<span class="success">成功 ✅</span></p>
+        <p>（如果你能看到这行字，说明 index.html 没问题）</p>
     </div>
-    <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
-        const { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, ComposedChart } = Recharts;
 
-        const App = () => {
-            const [data, setData] = useState({ pool: null, erp: null });
-            const [selectedStock, setSelectedStock] = useState(null);
-            const [period, setPeriod] = useState('5y');
-            const [status, setStatus] = useState("正在加载数据...");
+    <div class="box">
+        <p>2. 数据文件读取测试：</p>
+        <p id="data-status">正在尝试读取 stock_pool.json ...</p>
+    </div>
 
-            useEffect(() => {
-                const loadData = async () => {
-                    try {
-                        const [pRes, eRes] = await Promise.all([
-                            fetch('./data/stock_pool.json'),
-                            fetch('./data/erp_data.json')
-                        ]);
-                        if (!pRes.ok || !eRes.ok) throw new Error("无法读取JSON文件，请确保文件夹中有 data/ 目录");
-                        
-                        const pool = await pRes.json();
-                        const erp = await eRes.json();
-                        
-                        setData({ pool: pool.stocks, erp: erp.stocks });
-                        if (pool.stocks.length > 0) setSelectedStock(pool.stocks[0].ts_code);
-                        setStatus("加载成功");
-                    } catch (err) {
-                        setStatus("数据加载失败: " + err.message);
-                    }
-                };
-                loadData();
-            }, []);
-
-            const chartData = useMemo(() => {
-                if (!data.erp || !selectedStock || !data.erp[selectedStock]) return [];
-                const s = data.erp[selectedStock];
-                const stats = s.rolling_stats[period];
-                return s.dates.map((d, i) => ({
-                    date: d, erp: s.erp[i], mean: stats.mean[i],
-                    p1: stats.p1std[i], p2: stats.p2std[i],
-                    m1: stats.m1std[i], m2: stats.m2std[i]
-                }));
-            }, [data, selectedStock, period]);
-
-            if (status !== "加载成功") return <div className="p-20 text-center text-red-500 font-bold">{status}</div>;
-
-            return (
-                <div className="p-6 max-w-7xl mx-auto">
-                    <div className="flex justify-between items-center mb-6">
-                        <h1 className="text-2xl font-bold text-blue-900">A股红利股 ERP 滚动分析</h1>
-                        <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">数据已同步: 2025-12-18</span>
-                    </div>
-
-                    <div className="grid grid-cols-4 gap-6">
-                        <div className="col-span-1 bg-white border rounded shadow-sm overflow-hidden flex flex-col h-[700px]">
-                            <div className="p-3 bg-gray-100 font-bold border-b text-sm">备选池 ({data.pool.length})</div>
-                            <div className="overflow-y-auto flex-1">
-                                {data.pool.map(s => (
-                                    <div key={s.ts_code} onClick={() => setSelectedStock(s.ts_code)} 
-                                         className={`p-3 cursor-pointer border-b hover:bg-blue-50 transition-colors ${selectedStock === s.ts_code ? 'bg-blue-100 border-l-4 border-l-blue-600' : ''}`}>
-                                        <div className="font-bold text-sm">{s.name}</div>
-                                        <div className="text-xs text-gray-500">{s.ts_code} | 股息率: {(s.dividend_yield*100).toFixed(2)}%</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div className="col-span-3 space-y-4">
-                            <div className="flex items-center gap-4 bg-white p-3 border rounded shadow-sm">
-                                <span className="text-sm font-bold text-gray-600">滚动周期:</span>
-                                {['3y', '5y', '10y'].map(p => (
-                                    <button key={p} onClick={() => setPeriod(p)} 
-                                            className={`px-6 py-1 rounded-full text-sm font-medium transition-all ${period === p ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>
-                                        {p.toUpperCase()}
-                                    </button>
-                                ))}
-                                <span className="ml-auto text-xs text-gray-400 font-mono italic">ERP = 股息率(TTM) - 10Y国债收益率</span>
-                            </div>
-
-                            <div className="bg-white p-6 border rounded shadow-sm h-[600px]">
-                                <ResponsiveContainer>
-                                    <ComposedChart data={chartData}>
-                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                                        <XAxis dataKey="date" tick={{fontSize: 10}} minTickGap={50} />
-                                        <YAxis domain={['auto', 'auto']} tick={{fontSize: 10}} unit="%" />
-                                        <Tooltip contentStyle={{fontSize: '12px', borderRadius: '8px'}} />
-                                        <Legend verticalAlign="top" height={36}/>
-                                        
-                                        {/* ±2σ 区间 (浅色带) */}
-                                        <Area type="monotone" dataKey="p2" stroke="none" fill="#fee2e2" fillOpacity={0.4} name="+2σ" />
-                                        <Area type="monotone" dataKey="m2" stroke="none" fill="#fee2e2" fillOpacity={0.4} name="-2σ" />
-                                        
-                                        {/* ±1σ 区间 (稍深色带) */}
-                                        <Area type="monotone" dataKey="p1" stroke="none" fill="#fecaca" fillOpacity={0.5} name="+1σ" />
-                                        <Area type="monotone" dataKey="m1" stroke="none" fill="#fecaca" fillOpacity={0.5} name="-1σ" />
-
-                                        {/* 滚动均值线 */}
-                                        <Line type="monotone" dataKey="mean" stroke="#94a3b8" strokeDasharray="5 5" dot={false} name="滚动均值" />
-                                        
-                                        {/* 实际 ERP 折线 */}
-                                        <Line type="monotone" dataKey="erp" stroke="#2563eb" strokeWidth={2} dot={false} name="当前 ERP" />
-                                    </ComposedChart>
-                                </ResponsiveContainer>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    <script>
+        // 尝试直接读取同级目录下的数据
+        fetch('./data/stock_pool.json')
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('文件未找到 (404)');
+                }
+            })
+            .then(data => {
+                document.getElementById('data-status').innerHTML = 
+                    `<span class="success">读取成功 ✅</span><br>找到 ${data.stocks.length} 只股票`;
+            })
+            .catch(error => {
+                document.getElementById('data-status').innerHTML = 
+                    `<span class="error">读取失败 ❌</span><br>错误原因：${error.message}<br><br>建议检查：<br>1. 仓库里是否有 "data" 文件夹？<br>2. 文件夹名字是大写 "Data" 吗？(必须小写)`;
+            });
     </script>
 </body>
 </html>
