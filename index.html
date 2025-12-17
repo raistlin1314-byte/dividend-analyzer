@@ -5,68 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>险资红利策略 ERP 分析</title>
     
-    <script src="https://cdn.bootcdn.net/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
-
     <script crossorigin src="https://cdn.bootcdn.net/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
     <script crossorigin src="https://cdn.bootcdn.net/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    
     <script crossorigin src="https://cdn.bootcdn.net/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
-    
     <script crossorigin src="https://cdn.bootcdn.net/ajax/libs/recharts/2.12.3/Recharts.min.js"></script>
-    
     <script crossorigin src="https://cdn.bootcdn.net/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
 
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f3f4f6; }
-        .loading-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; color: #6b7280; }
-        .spinner { border: 4px solid #e5e7eb; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 16px; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f2f5; color: #333; }
+        
+        /* 布局容器 */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        
+        /* 头部样式 */
+        header { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        h1 { margin: 0; font-size: 24px; color: #1a1a1a; }
+        .subtitle { color: #666; font-size: 14px; margin-top: 5px; }
+        
+        /* 周期切换按钮 */
+        .btn-group { background: #f5f5f5; padding: 4px; border-radius: 6px; display: flex; gap: 5px; }
+        .btn { border: none; padding: 6px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; background: transparent; color: #666; transition: all 0.2s; }
+        .btn.active { background: #1890ff; color: #fff; box-shadow: 0 2px 4px rgba(24,144,255,0.2); }
+        .btn:hover:not(.active) { background: #e6e6e6; }
+
+        /* 主内容网格布局 */
+        .main-grid { display: grid; grid-template-columns: 280px 1fr; gap: 20px; height: 600px; }
+        
+        /* 左侧股票列表 */
+        .stock-list-panel { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; flex-direction: column; overflow: hidden; }
+        .panel-header { padding: 15px; border-bottom: 1px solid #eee; font-weight: bold; background: #fafafa; }
+        .list-content { overflow-y: auto; flex: 1; }
+        
+        .stock-item { padding: 12px 15px; border-bottom: 1px solid #f0f0f0; cursor: pointer; transition: background 0.2s; }
+        .stock-item:hover { background-color: #f0f7ff; }
+        .stock-item.active { background-color: #e6f7ff; border-left: 4px solid #1890ff; padding-left: 11px; }
+        .stock-name { font-weight: bold; font-size: 15px; margin-bottom: 4px; display: flex; justify-content: space-between; }
+        .stock-info { font-size: 12px; color: #999; display: flex; justify-content: space-between; }
+        .yield-high { color: #cf1322; font-weight: bold; }
+
+        /* 右侧图表区域 */
+        .chart-panel { background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 20px; display: flex; flex-direction: column; }
+        .chart-header { margin-bottom: 20px; font-size: 18px; font-weight: bold; color: #333; }
+        .chart-container { flex: 1; min-height: 0; position: relative; }
+
+        /* 加载与错误状态 */
+        .center-msg { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #1890ff; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* 滚动条样式 */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .main-grid { grid-template-columns: 1fr; height: auto; }
+            .stock-list-panel { height: 300px; }
+            .chart-panel { height: 400px; }
+        }
     </style>
 </head>
 <body>
 
-    <div id="crash-screen" style="display:none; position: fixed; inset: 0; background: white; z-index: 9999; padding: 40px; text-align: center;">
-        <h1 style="color: #ef4444; font-size: 24px; margin-bottom: 20px;">⚠️ 无法启动</h1>
-        <p id="crash-reason" style="color: #374151; font-family: monospace; background: #fef2f2; padding: 15px; border-radius: 8px; max-width: 600px; margin: 0 auto;"></p>
-        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer;">刷新重试</button>
-    </div>
-
     <div id="root">
-        <div class="loading-box">
+        <div class="center-msg">
             <div class="spinner"></div>
-            <p>正在从 BootCDN 加载资源...</p>
+            <p>正在初始化分析系统...</p>
         </div>
     </div>
 
-    <script>
-        // 错误处理函数
-        function reportCrash(msg) {
-            document.getElementById('root').style.display = 'none';
-            document.getElementById('crash-screen').style.display = 'block';
-            document.getElementById('crash-reason').textContent = msg;
-            console.error(msg);
-        }
-
-        // 检查库是否加载成功
-        window.onload = function() {
-            // 兼容性处理：Recharts 有时会挂载在 window.Recharts 或 window.recharts
-            if (!window.React) return reportCrash("React 加载失败 (BootCDN)");
-            if (!window.ReactDOM) return reportCrash("ReactDOM 加载失败 (BootCDN)");
-            if (!window.Recharts) return reportCrash("Recharts 加载失败 (BootCDN) - 请尝试下载文件到本地");
-            
-            // 如果都成功，控制台输出
-            console.log("所有库加载成功，启动 App...");
-        };
-    </script>
-
     <script type="text/babel">
         const { useState, useEffect, useMemo } = React;
-        const { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Line, ComposedChart } = Recharts;
+        const { ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = Recharts;
 
         const App = () => {
             const [data, setData] = useState({ pool: [], erp: {} });
@@ -75,127 +81,140 @@
             const [status, setStatus] = useState('loading');
             const [errorMsg, setErrorMsg] = useState('');
 
+            // 加载数据
             useEffect(() => {
-                const fetchData = async () => {
+                const loadData = async () => {
                     try {
-                        // 添加时间戳防止缓存
                         const t = new Date().getTime();
                         const [poolRes, erpRes] = await Promise.all([
                             fetch(`./data/stock_pool.json?t=${t}`),
                             fetch(`./data/erp_data.json?t=${t}`)
                         ]);
 
-                        if (!poolRes.ok) throw new Error("无法读取 stock_pool.json");
-                        if (!erpRes.ok) throw new Error("无法读取 erp_data.json");
+                        if (!poolRes.ok || !erpRes.ok) throw new Error("数据文件读取失败");
 
-                        const pool = await poolRes.json();
-                        const erp = await erpRes.json();
-                        
-                        // 简单校验
-                        if (!pool.stocks || !erp.stocks) throw new Error("数据格式错误: 缺少 stocks 字段");
+                        const poolData = await poolRes.json();
+                        const erpData = await erpRes.json();
 
-                        setData({ pool: pool.stocks, erp: erp.stocks });
-                        if (pool.stocks.length > 0) setSelectedStock(pool.stocks[0].ts_code);
-                        setStatus('ready');
-                    } catch (e) {
+                        if (!poolData.stocks || !erpData.stocks) throw new Error("数据格式错误");
+
+                        setData({ pool: poolData.stocks, erp: erpData.stocks });
+                        if (poolData.stocks.length > 0) {
+                            setSelectedStock(poolData.stocks[0].ts_code);
+                        }
+                        setStatus('success');
+                    } catch (err) {
                         setStatus('error');
-                        setErrorMsg(e.message);
+                        setErrorMsg(err.message);
                     }
                 };
-                fetchData();
+                loadData();
             }, []);
 
+            // 准备图表数据
             const chartData = useMemo(() => {
                 if (!selectedStock || !data.erp[selectedStock]) return [];
-                const s = data.erp[selectedStock];
-                if (!s.rolling_stats || !s.rolling_stats[period]) return [];
-                const stats = s.rolling_stats[period];
-                
-                return s.dates.map((d, i) => ({
+                const stock = data.erp[selectedStock];
+                const stats = stock.rolling_stats[period];
+                if (!stats) return [];
+
+                return stock.dates.map((d, i) => ({
                     date: d,
-                    erp: s.erp[i],
+                    erp: stock.erp[i],
                     mean: stats.mean[i],
                     p1: stats.p1std[i], p2: stats.p2std[i],
                     m1: stats.m1std[i], m2: stats.m2std[i]
                 }));
             }, [data, selectedStock, period]);
 
+            // 错误渲染
             if (status === 'error') {
                 return (
-                    <div className="flex flex-col items-center justify-center h-screen text-red-500">
-                        <div className="text-4xl mb-2">❌</div>
-                        <p>数据加载错误：{errorMsg}</p>
-                        <p className="text-sm text-gray-400 mt-2">请检查 GitHub 仓库中是否有 data 文件夹</p>
+                    <div className="center-msg" style={{color: 'red'}}>
+                        <h2>⚠️ 加载失败</h2>
+                        <p>{errorMsg}</p>
+                        <p style={{fontSize: '12px', color: '#666'}}>请确保 data 文件夹已上传至 GitHub</p>
                     </div>
                 );
             }
 
+            // 加载中渲染
             if (status === 'loading') return null;
 
+            // 正常渲染
             return (
-                <div className="max-w-7xl mx-auto p-4 lg:p-8 min-h-screen">
-                    <header className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <div className="container">
+                    <header>
                         <div>
-                            <h1 className="text-2xl font-bold text-gray-900">
-                                📊 险资红利策略 ERP 分析
-                            </h1>
-                            <p className="text-sm text-gray-500 mt-1">
-                                已筛选 {data.pool.length} 只标的 • 数据源: Tushare
-                            </p>
+                            <h1>险资红利策略 ERP 分析</h1>
+                            <div className="subtitle">共筛选出 {data.pool.length} 只高股息标的</div>
                         </div>
-                        <div className="flex bg-white rounded p-1 shadow-sm border">
+                        <div className="btn-group">
                             {['3y', '5y', '10y'].map(p => (
-                                <button key={p} onClick={() => setPeriod(p)}
-                                    className={`px-4 py-1.5 text-sm font-medium rounded transition-colors ${
-                                        period === p ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-50'
-                                    }`}>
-                                    {p.toUpperCase()}
+                                <button 
+                                    key={p} 
+                                    onClick={() => setPeriod(p)}
+                                    className={`btn ${period === p ? 'active' : ''}`}
+                                >
+                                    {p.toUpperCase()} 周期
                                 </button>
                             ))}
                         </div>
                     </header>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[600px]">
+                    <div className="main-grid">
                         {/* 左侧列表 */}
-                        <div className="bg-white rounded-lg shadow-sm border border-gray-200 flex flex-col overflow-hidden">
-                            <div className="p-3 bg-gray-50 border-b font-medium text-sm text-gray-700">股票池</div>
-                            <div className="flex-1 overflow-y-auto">
-                                {data.pool.map(s => (
-                                    <div key={s.ts_code} onClick={() => setSelectedStock(s.ts_code)}
-                                         className={`p-3 border-b cursor-pointer transition-colors ${
-                                             selectedStock === s.ts_code ? 'bg-blue-50 border-l-4 border-l-blue-600' : 'border-l-4 border-l-transparent hover:bg-gray-50'
-                                         }`}>
-                                        <div className="flex justify-between font-bold text-gray-800 text-sm">
-                                            <span>{s.name}</span>
-                                            <span className="text-red-600">{(s.dividend_yield*100).toFixed(2)}%</span>
+                        <div className="stock-list-panel">
+                            <div className="panel-header">股票池</div>
+                            <div className="list-content">
+                                {data.pool.map(stock => (
+                                    <div 
+                                        key={stock.ts_code}
+                                        onClick={() => setSelectedStock(stock.ts_code)}
+                                        className={`stock-item ${selectedStock === stock.ts_code ? 'active' : ''}`}
+                                    >
+                                        <div className="stock-name">
+                                            <span>{stock.name}</span>
+                                            <span className="yield-high">{(stock.dividend_yield * 100).toFixed(2)}%</span>
                                         </div>
-                                        <div className="text-xs text-gray-400 mt-1">{s.ts_code}</div>
+                                        <div className="stock-info">
+                                            <span>{stock.ts_code}</span>
+                                            <span>{(stock.total_mv / 10000).toFixed(0)}亿</span>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
 
                         {/* 右侧图表 */}
-                        <div className="lg:col-span-3 bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex flex-col">
-                            <h3 className="font-bold text-gray-700 mb-4">
-                                ERP 滚动通道 ({data.pool.find(s=>s.ts_code===selectedStock)?.name})
-                            </h3>
-                            <div style={{ flex: 1, minHeight: 0 }}>
+                        <div className="chart-panel">
+                            <div className="chart-header">
+                                {selectedStock && data.pool.find(s => s.ts_code === selectedStock)?.name} 
+                                <span style={{fontSize: '14px', fontWeight: 'normal', color: '#666', marginLeft: '10px'}}>
+                                    ERP 滚动标准差通道
+                                </span>
+                            </div>
+                            
+                            <div className="chart-container">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <ComposedChart data={chartData}>
-                                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                                        <XAxis dataKey="date" tick={{fontSize:11}} minTickGap={50} />
-                                        <YAxis unit="%" domain={['auto', 'auto']} tick={{fontSize:11}} />
-                                        <Tooltip labelStyle={{color:'#666'}} formatter={(v)=>v.toFixed(2)+'%'} />
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e8e8e8" />
+                                        <XAxis dataKey="date" tick={{fontSize: 11}} minTickGap={50} />
+                                        <YAxis unit="%" tick={{fontSize: 11}} domain={['auto', 'auto']} />
+                                        <Tooltip 
+                                            contentStyle={{borderRadius: '4px', border: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.15)'}}
+                                            formatter={(value) => value.toFixed(2) + '%'}
+                                            labelStyle={{color: '#666'}}
+                                        />
                                         <Legend verticalAlign="top" height={36}/>
                                         
-                                        <Area type="monotone" dataKey="p2" stackId="2" fill="#fee2e2" stroke="none" fillOpacity={0.5} name="+2σ (警戒)" />
-                                        <Area type="monotone" dataKey="m2" stackId="3" fill="#fee2e2" stroke="none" fillOpacity={0.5} name="-2σ (低估)" />
-                                        <Area type="monotone" dataKey="p1" stackId="4" fill="#ffedd5" stroke="none" fillOpacity={0.5} name="+1σ" />
-                                        <Area type="monotone" dataKey="m1" stackId="5" fill="#ffedd5" stroke="none" fillOpacity={0.5} name="-1σ" />
+                                        <Area type="monotone" dataKey="p2" stackId="2" stroke="none" fill="#ffccc7" fillOpacity={0.6} name="+2σ (警戒)" />
+                                        <Area type="monotone" dataKey="m2" stackId="3" stroke="none" fill="#ffccc7" fillOpacity={0.6} name="-2σ (低估)" />
+                                        <Area type="monotone" dataKey="p1" stackId="4" stroke="none" fill="#ffe7ba" fillOpacity={0.6} name="+1σ" />
+                                        <Area type="monotone" dataKey="m1" stackId="5" stroke="none" fill="#ffe7ba" fillOpacity={0.6} name="-1σ" />
                                         
-                                        <Line type="monotone" dataKey="mean" stroke="#9ca3af" strokeDasharray="5 5" dot={false} name="均值" />
-                                        <Line type="monotone" dataKey="erp" stroke="#2563eb" strokeWidth={2} dot={false} activeDot={{r:5}} name="当前ERP" />
+                                        <Line type="monotone" dataKey="mean" stroke="#8c8c8c" strokeDasharray="5 5" dot={false} name="历史均值" />
+                                        <Line type="monotone" dataKey="erp" stroke="#1890ff" strokeWidth={2} dot={false} activeDot={{r: 5}} name="当前 ERP" />
                                     </ComposedChart>
                                 </ResponsiveContainer>
                             </div>
