@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-险资红利策略 - Tushare版 (终极修复版 v2.0)
+险资红利策略 - Tushare版 (终极修复版 v3.0)
 
-功能升级：
-1. [智能回溯] 自动检测当日数据质量，如果市值缺失(NaN)，自动回退使用上一交易日数据。
-2. [全量计算] 默认计算 200 只股票的 ERP 图表，不再只显示前 20 只。
-3. [双重保险] 保留了"股价x股本"的手动计算逻辑，作为最后的兜底。
+更新日志：
+v3.0: [关键修复] 解决 JSON 序列化报错问题。
+      强制将所有 NaN (空值) 转换为 null，确保网页前端能正常解析，
+      不再出现 "Unexpected token 'N'" 错误。
+v2.0: 智能回溯数据，解决市值 NaN 问题；放宽计算数量限制。
 """
 
 import tushare as ts
@@ -42,7 +43,6 @@ class InsuranceStrategyTushare:
     def _test_connection(self) -> bool:
         """测试Tushare连接"""
         try:
-            # 尝试获取上一年的最后一天，确保能拿到数据
             df = self.pro.trade_cal(exchange='SSE', start_date='20240101', end_date='20240101')
             if df is not None:
                 print("✓ Tushare API 连接成功")
@@ -89,27 +89,21 @@ class InsuranceStrategyTushare:
             return self.get_stock_pool(use_sample=True)
 
     def get_daily_basic_data(self, trade_date: str = None) -> pd.DataFrame:
-        """
-        获取每日指标数据 (智能回溯版)
-        逻辑：如果指定日期的数据存在大量空值(NaN)，则自动尝试前一天，直到找到有效数据。
-        """
+        """获取每日指标数据 (智能回溯版)"""
         if trade_date is None:
             trade_date = self._get_latest_trade_date()
         
-        # 请求字段：增加了 total_share 以便手动计算市值
         req_fields = 'ts_code,trade_date,close,turnover_rate,pe_ttm,pb,ps_ttm,dv_ratio,dv_ttm,total_mv,circ_mv,total_share'
         
         print(f"准备获取每日指标数据 (起始日期: {trade_date})...")
         
-        # 内部函数：尝试获取某一天的数据
         def fetch_one_day(date_str):
             try:
                 df = self.pro.daily_basic(trade_date=date_str, fields=req_fields)
                 if df is None or df.empty:
                     return None
                 
-                # 【关键逻辑】检查数据质量
-                # 如果总市值(total_mv)缺失率超过 50%，说明 Tushare 还没更新完数据，该日数据无效
+                # 检查数据质量
                 nan_ratio = df['total_mv'].isna().mean()
                 if nan_ratio > 0.5:
                     print(f"  ⚠ {date_str} 数据质量差 (市值缺失率 {nan_ratio:.1%})，跳过...")
@@ -121,11 +115,11 @@ class InsuranceStrategyTushare:
         # 1. 优先尝试指定日期
         df = fetch_one_day(trade_date)
         
-        # 2. 如果数据无效，回溯最近 5 个交易日
+        # 2. 回溯最近 5 个交易日
         if df is None:
             print(f"  ⚠ 正在回溯寻找最近的完整数据...")
             current_dt = datetime.strptime(trade_date, '%Y%m%d')
-            for i in range(1, 6): # 最多回溯5天
+            for i in range(1, 6):
                 prev_date = (current_dt - timedelta(days=i)).strftime('%Y%m%d')
                 df = fetch_one_day(prev_date)
                 if df is not None:
@@ -136,7 +130,7 @@ class InsuranceStrategyTushare:
             print(f"✓ 获取 {len(df)} 条有效指标数据")
             return df
         else:
-            print("✗ 无法获取有效的每日指标数据 (已尝试回溯)")
+            print("✗ 无法获取有效的每日指标数据")
             return pd.DataFrame()
     
     def screen_stocks(self, stock_pool: pd.DataFrame) -> pd.DataFrame:
@@ -148,15 +142,13 @@ class InsuranceStrategyTushare:
         print("开始筛选高股息股票")
         print("="*60)
         
-        # 获取智能回溯后的每日数据
         daily_data = self.get_daily_basic_data()
         if daily_data.empty:
             return pd.DataFrame()
         
-        # 合并数据
         df = pd.merge(stock_pool, daily_data, on='ts_code', how='inner')
         
-        # 【双重保险】修复市值：如果 Tushare 给的 total_mv 还是空，用 股价*股本 计算
+        # 修复市值
         def fix_market_cap(row):
             if pd.notna(row['total_mv']):
                 return row['total_mv']
@@ -167,29 +159,24 @@ class InsuranceStrategyTushare:
         if 'total_share' in df.columns:
             df['total_mv'] = df.apply(fix_market_cap, axis=1)
         
-        # 1. 排除ST
+        # 排除ST
         df = df[~df['name'].str.contains('ST|\\*ST', case=False, na=False)]
         
-        # 2. 补全股息率
+        # 补全股息率
         df['dividend_yield'] = df['dv_ttm'].fillna(df['dv_ratio'])
         
-        # 3. 筛选有效数据
+        # 筛选有效数据
         df_clean = df.dropna(subset=['dividend_yield', 'total_mv', 'close'])
         
-        # 4. 执行阈值筛选
+        # 执行筛选
         df_clean['dividend_yield_pct'] = df_clean['dividend_yield'] / 100
-        
-        # 股息率筛选
         df_div = df_clean[df_clean['dividend_yield_pct'] >= self.dividend_yield_threshold]
         
-        # 市值筛选 (万元 -> 亿元)
         df_div['mkt_cap_yi'] = df_div['total_mv'] / 10000
         df_cap = df_div[df_div['mkt_cap_yi'] >= self.market_cap_threshold]
         
-        # 股价筛选
         df_final = df_cap[df_cap['close'] >= self.min_price]
         
-        # 整理输出列
         result = df_final[[
             'ts_code', 'name', 'industry', 'close',
             'dividend_yield_pct', 'mkt_cap_yi', 'pe_ttm', 'pb'
@@ -221,7 +208,7 @@ class InsuranceStrategyTushare:
 
 
 class ERPCalculator:
-    """ERP计算器 (包含重试机制)"""
+    """ERP计算器 (包含重试机制和数据清洗)"""
     
     def __init__(self, token: str):
         ts.set_token(token)
@@ -263,7 +250,6 @@ class ERPCalculator:
         except:
             pass
         
-        # 失败则使用固定利率兜底
         dates = pd.date_range(start=start_date, end=end_date, freq='D')
         return pd.DataFrame({'trade_date': dates, 'risk_free_rate': 0.02})
     
@@ -288,27 +274,29 @@ class ERPCalculator:
         
         rolling_stats = self._calculate_rolling_stats(merged)
         
-        # 采样压缩 (每 2 天取一个点，减小JSON体积)
+        # 采样压缩
         step = 2 
-        
         current_erp = merged['erp'].iloc[-1]
         
+        # 【关键修改】使用 helper 函数确保所有 float 列表中的 NaN 都被转为 None
+        def safe_list(lst):
+            return [round(x, 2) if pd.notna(x) else None for x in lst]
+
         result = {
             'dates': merged['trade_date'].dt.strftime('%Y-%m-%d').tolist()[::step],
-            'erp': [round(x, 2) for x in merged['erp'].tolist()[::step]],
-            'mean': [round(x, 2) for x in rolling_stats['5y']['mean'].tolist()[::step]], # 默认显示5y均值
+            'erp': safe_list(merged['erp'].tolist()[::step]),
+            'mean': safe_list(rolling_stats['5y']['mean'].tolist()[::step]),
             'rolling_stats': {},
             'current_position': {'erp': round(float(current_erp), 4)}
         }
         
-        # 将复杂的统计数据放入 rolling_stats
         for period, stats in rolling_stats.items():
             result['rolling_stats'][period] = {
-                'mean': [round(x, 2) if pd.notna(x) else None for x in stats['mean'].tolist()[::step]],
-                'p1std': [round(x, 2) if pd.notna(x) else None for x in stats['+1std'].tolist()[::step]],
-                'p2std': [round(x, 2) if pd.notna(x) else None for x in stats['+2std'].tolist()[::step]],
-                'm1std': [round(x, 2) if pd.notna(x) else None for x in stats['-1std'].tolist()[::step]],
-                'm2std': [round(x, 2) if pd.notna(x) else None for x in stats['-2std'].tolist()[::step]],
+                'mean': safe_list(stats['mean'].tolist()[::step]),
+                'p1std': safe_list(stats['+1std'].tolist()[::step]),
+                'p2std': safe_list(stats['+2std'].tolist()[::step]),
+                'm1std': safe_list(stats['-1std'].tolist()[::step]),
+                'm2std': safe_list(stats['-2std'].tolist()[::step]),
             }
         
         return result
@@ -317,7 +305,7 @@ class ERPCalculator:
         results = {}
         windows = {'3y': 756, '5y': 1260, '10y': 2520}
         for period, window_days in windows.items():
-            if len(df) < window_days // 2: # 稍微放宽限制
+            if len(df) < window_days // 2:
                 continue
             rolling_mean = df['erp'].rolling(window=window_days, min_periods=window_days//2).mean()
             rolling_std = df['erp'].rolling(window=window_days, min_periods=window_days//2).std()
@@ -331,12 +319,20 @@ class ERPCalculator:
         return results
 
 def save_results(stock_pool: pd.DataFrame, erp_data: Dict, output_dir: str, params: Dict):
+    """
+    保存结果为JSON文件
+    【关键修复】遍历所有数据，将 Pandas/Numpy 的 NaN 强制转换为 None (即 JSON null)
+    """
     os.makedirs(output_dir, exist_ok=True)
     
     stocks = stock_pool.to_dict(orient='records')
+    
+    # 清洗数据：遍历所有字段，把 NaN 换成 None
     for s in stocks:
         for k, v in s.items():
-            if isinstance(v, float):
+            if pd.isna(v):  # 检查是否为 NaN, NaT 或 None
+                s[k] = None
+            elif isinstance(v, float):
                 s[k] = round(v, 4)
                 
     stock_pool_file = os.path.join(output_dir, 'stock_pool.json')
@@ -351,6 +347,8 @@ def save_results(stock_pool: pd.DataFrame, erp_data: Dict, output_dir: str, para
     if erp_data:
         erp_file = os.path.join(output_dir, 'erp_data.json')
         with open(erp_file, 'w', encoding='utf-8') as f:
+            # erp_data 已经在 calculate_erp 中处理过列表中的 NaN，但为了保险起见，这里直接dump
+            # 因为字典结构复杂，我们依赖前面的 safe_list 处理
             json.dump({'updated_at': datetime.now().isoformat(), 'stocks': erp_data}, f, ensure_ascii=False)
 
 def main():
@@ -363,8 +361,6 @@ def main():
     parser.add_argument('--output', default='./data')
     parser.add_argument('--sample', action='store_true')
     parser.add_argument('--no-erp', action='store_true')
-    
-    # 【修改点】默认值从 20 改为 200，保证所有筛选出来的股票都计算图表
     parser.add_argument('--erp-count', type=int, default=200)
     
     args = parser.parse_args()
@@ -410,13 +406,10 @@ def main():
         print(f"\n开始计算 ERP 图表数据 (目标: {min(args.erp_count, len(results))} 只)...")
         erp_calculator = ERPCalculator(args.token)
         
-        # 限制计算数量
         calc_list = results.head(args.erp_count)
         
         for idx, row in calc_list.iterrows():
             ts_code = row['ts_code']
-            
-            # 【重试机制】
             for attempt in range(3):
                 try:
                     print(f"[{idx+1}/{len(calc_list)}] 计算 {row['name']}...", end="\r")
@@ -433,8 +426,7 @@ def main():
                         time.sleep(2)
                     else:
                         print(f"\n  ✗ {row['name']} 计算失败")
-            
-            time.sleep(0.1) # 礼貌等待
+            time.sleep(0.1)
             
     print(f"\n计算完成，成功生成 {len(erp_data)} 只股票图表数据")
     
