@@ -22,7 +22,7 @@ jobs:
       - name: 执行选股与 ERP 计算脚本
         env:
           TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
-        run: python insurance_strategy_tushare.py --token $TUSHARE_TOKEN
+        run: python insurance_strategy_tushare.py --token $TUSHARE_TOKEN --mode 3
 
       - name: 提交并推送数据
         run: |
