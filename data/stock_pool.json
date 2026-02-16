@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-02-13T10:53:00.542098",
+  "updated_at": "2026-02-16T10:58:05.544957",
   "screening_params": {
     "mode": "严格模式",
     "min_dividend_yield": 0.05,
@@ -60,7 +60,7 @@
     },
     {
       "ts_code": "600329.SH",
-      "name": "XD达仁堂",
+      "name": "达仁堂",
       "industry": "中成药",
       "close": 43.19,
       "dividend_yield": 0.0864,
