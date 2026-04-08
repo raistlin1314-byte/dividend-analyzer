@@ -1,532 +1,522 @@
 {
-  "updated_at": "2026-04-07T11:06:42.008656",
+  "updated_at": "2026-04-08T11:08:15.420418",
   "screening_params": {
     "mode": "严格模式",
     "min_dividend_yield": 0.05,
     "min_market_cap": 200,
     "min_price": 5.0
   },
-  "total_count": 52,
+  "total_count": 51,
   "stocks": [
     {
       "ts_code": "603565.SH",
       "name": "中谷物流",
       "industry": "水运",
-      "close": 11.15,
-      "dividend_yield": 0.1094,
-      "market_cap": 234.157,
-      "pe_ttm": 10.9568,
-      "pb": 2.3702
+      "close": 11.45,
+      "dividend_yield": 0.1065,
+      "market_cap": 240.4572,
+      "pe_ttm": 11.2516,
+      "pb": 2.4339
     },
     {
       "ts_code": "601919.SH",
       "name": "中远海控",
       "industry": "水运",
-      "close": 15.1,
-      "dividend_yield": 0.1057,
-      "market_cap": 2312.2158,
-      "pe_ttm": 7.4906,
-      "pb": 0.9991
-    },
-    {
-      "ts_code": "600329.SH",
-      "name": "达仁堂",
-      "industry": "中成药",
-      "close": 40.72,
-      "dividend_yield": 0.0916,
-      "market_cap": 313.5824,
-      "pe_ttm": 14.7151,
-      "pb": 4.417
+      "close": 15.2,
+      "dividend_yield": 0.1051,
+      "market_cap": 2327.5285,
+      "pe_ttm": 7.5402,
+      "pb": 1.0057
     },
     {
       "ts_code": "600256.SH",
       "name": "广汇能源",
       "industry": "石油开采",
-      "close": 6.99,
-      "dividend_yield": 0.089,
-      "market_cap": 446.801,
-      "pe_ttm": 22.6765,
-      "pb": 1.8755
+      "close": 6.32,
+      "dividend_yield": 0.0984,
+      "market_cap": 403.9746,
+      "pe_ttm": 20.5029,
+      "pb": 1.6957
+    },
+    {
+      "ts_code": "600329.SH",
+      "name": "达仁堂",
+      "industry": "中成药",
+      "close": 41.55,
+      "dividend_yield": 0.0898,
+      "market_cap": 319.9742,
+      "pe_ttm": 15.0151,
+      "pb": 4.507
     },
     {
       "ts_code": "601166.SH",
       "name": "兴业银行",
       "industry": "银行",
-      "close": 18.53,
-      "dividend_yield": 0.0877,
-      "market_cap": 3921.4775,
-      "pe_ttm": 5.062,
-      "pb": 0.4843
-    },
-    {
-      "ts_code": "000651.SZ",
-      "name": "格力电器",
-      "industry": "家用电器",
-      "close": 37.33,
-      "dividend_yield": 0.0801,
-      "market_cap": 2091.0048,
-      "pe_ttm": 6.5994,
-      "pb": 1.5061
+      "close": 18.78,
+      "dividend_yield": 0.0865,
+      "market_cap": 3974.3846,
+      "pe_ttm": 5.1303,
+      "pb": 0.4908
     },
     {
       "ts_code": "600566.SH",
       "name": "济川药业",
       "industry": "中成药",
-      "close": 26.11,
-      "dividend_yield": 0.0798,
-      "market_cap": 240.646,
-      "pe_ttm": 14.5741,
-      "pb": 1.7374
+      "close": 26.3,
+      "dividend_yield": 0.0793,
+      "market_cap": 242.3972,
+      "pe_ttm": 14.6802,
+      "pb": 1.75
+    },
+    {
+      "ts_code": "000651.SZ",
+      "name": "格力电器",
+      "industry": "家用电器",
+      "close": 37.8,
+      "dividend_yield": 0.0791,
+      "market_cap": 2117.3314,
+      "pe_ttm": 6.6824,
+      "pb": 1.525
     },
     {
       "ts_code": "600036.SH",
       "name": "招商银行",
       "industry": "银行",
-      "close": 38.99,
-      "dividend_yield": 0.0773,
-      "market_cap": 9833.2178,
-      "pe_ttm": 6.5476,
-      "pb": 0.8977
+      "close": 39.62,
+      "dividend_yield": 0.076,
+      "market_cap": 9992.1028,
+      "pe_ttm": 6.6534,
+      "pb": 0.9122
     },
     {
       "ts_code": "300979.SZ",
       "name": "华利集团",
       "industry": "服饰",
-      "close": 44.3,
-      "dividend_yield": 0.0745,
-      "market_cap": 516.981,
-      "pe_ttm": 16.1221,
-      "pb": 3.1836
+      "close": 44.98,
+      "dividend_yield": 0.0734,
+      "market_cap": 524.9166,
+      "pe_ttm": 16.3695,
+      "pb": 3.2324
     },
     {
       "ts_code": "603833.SH",
       "name": "欧派家居",
       "industry": "家居用品",
-      "close": 54.0,
-      "dividend_yield": 0.0685,
-      "market_cap": 328.9425,
-      "pe_ttm": 13.7015,
-      "pb": 1.8081
+      "close": 54.48,
+      "dividend_yield": 0.0679,
+      "market_cap": 331.8665,
+      "pe_ttm": 13.8233,
+      "pb": 1.8242
     },
     {
       "ts_code": "601577.SH",
       "name": "长沙银行",
       "industry": "银行",
-      "close": 9.41,
-      "dividend_yield": 0.0659,
-      "market_cap": 378.4282,
-      "pe_ttm": 4.6164,
-      "pb": 0.5419
+      "close": 9.61,
+      "dividend_yield": 0.0645,
+      "market_cap": 386.4713,
+      "pe_ttm": 4.7145,
+      "pb": 0.5534
     },
     {
       "ts_code": "600887.SH",
       "name": "伊利股份",
       "industry": "乳制品",
-      "close": 26.33,
-      "dividend_yield": 0.0646,
-      "market_cap": 1665.4675,
-      "pe_ttm": 20.7911,
-      "pb": 3.1262
-    },
-    {
-      "ts_code": "600219.SH",
-      "name": "南山铝业",
-      "industry": "铝",
-      "close": 6.09,
-      "dividend_yield": 0.064,
-      "market_cap": 699.3574,
-      "pe_ttm": 14.7684,
-      "pb": 1.4104
-    },
-    {
-      "ts_code": "600023.SH",
-      "name": "浙能电力",
-      "industry": "火力发电",
-      "close": 5.42,
-      "dividend_yield": 0.0627,
-      "market_cap": 726.7533,
-      "pe_ttm": 9.979,
-      "pb": 0.9769
-    },
-    {
-      "ts_code": "603156.SH",
-      "name": "养元饮品",
-      "industry": "软饮料",
-      "close": 29.95,
-      "dividend_yield": 0.0621,
-      "market_cap": 377.4531,
-      "pe_ttm": 23.4152,
-      "pb": 4.1993
-    },
-    {
-      "ts_code": "601928.SH",
-      "name": "凤凰传媒",
-      "industry": "出版业",
-      "close": 9.67,
-      "dividend_yield": 0.062,
-      "market_cap": 246.0918,
-      "pe_ttm": 12.585,
-      "pb": 1.2407
+      "close": 26.44,
+      "dividend_yield": 0.0643,
+      "market_cap": 1672.4254,
+      "pe_ttm": 20.878,
+      "pb": 3.1393
     },
     {
       "ts_code": "601088.SH",
       "name": "中国神华",
       "industry": "煤炭开采",
-      "close": 48.42,
-      "dividend_yield": 0.0618,
-      "market_cap": 10280.4223,
-      "pe_ttm": 19.4524,
-      "pb": 2.2887
+      "close": 46.76,
+      "dividend_yield": 0.064,
+      "market_cap": 9927.9749,
+      "pe_ttm": 18.7855,
+      "pb": 2.2102
+    },
+    {
+      "ts_code": "600023.SH",
+      "name": "浙能电力",
+      "industry": "火力发电",
+      "close": 5.48,
+      "dividend_yield": 0.062,
+      "market_cap": 734.7986,
+      "pe_ttm": 10.0895,
+      "pb": 0.9877
     },
     {
       "ts_code": "600546.SH",
       "name": "山煤国际",
       "industry": "煤炭开采",
-      "close": 11.23,
-      "dividend_yield": 0.0614,
-      "market_cap": 222.6298,
-      "pe_ttm": 18.0569,
-      "pb": 1.3594
+      "close": 11.18,
+      "dividend_yield": 0.0617,
+      "market_cap": 221.6386,
+      "pe_ttm": 17.9765,
+      "pb": 1.3534
     },
     {
-      "ts_code": "002271.SZ",
-      "name": "东方雨虹",
-      "industry": "其他建材",
-      "close": 15.1,
-      "dividend_yield": 0.0613,
-      "market_cap": 360.6937,
-      "pe_ttm": null,
-      "pb": 1.7316
+      "ts_code": "600219.SH",
+      "name": "南山铝业",
+      "industry": "铝",
+      "close": 6.32,
+      "dividend_yield": 0.0617,
+      "market_cap": 725.7699,
+      "pe_ttm": 15.3261,
+      "pb": 1.4636
     },
     {
       "ts_code": "002032.SZ",
       "name": "苏泊尔",
       "industry": "家用电器",
-      "close": 46.11,
-      "dividend_yield": 0.0606,
-      "market_cap": 369.659,
-      "pe_ttm": 17.6303,
-      "pb": 5.8809
+      "close": 45.88,
+      "dividend_yield": 0.0609,
+      "market_cap": 367.8151,
+      "pe_ttm": 17.5424,
+      "pb": 5.8516
+    },
+    {
+      "ts_code": "601928.SH",
+      "name": "凤凰传媒",
+      "industry": "出版业",
+      "close": 9.88,
+      "dividend_yield": 0.0607,
+      "market_cap": 251.4361,
+      "pe_ttm": 12.8583,
+      "pb": 1.2677
     },
     {
       "ts_code": "600901.SH",
       "name": "江苏金租",
       "industry": "多元金融",
-      "close": 6.61,
-      "dividend_yield": 0.0605,
-      "market_cap": 382.8424,
-      "pe_ttm": 12.1095,
-      "pb": 1.5783
+      "close": 6.76,
+      "dividend_yield": 0.0592,
+      "market_cap": 391.5302,
+      "pe_ttm": 12.3843,
+      "pb": 1.6141
     },
     {
       "ts_code": "002027.SZ",
       "name": "分众传媒",
       "industry": "广告包装",
-      "close": 6.31,
-      "dividend_yield": 0.0602,
-      "market_cap": 911.3028,
-      "pe_ttm": 16.7895,
-      "pb": 6.3723
-    },
-    {
-      "ts_code": "000157.SZ",
-      "name": "中联重科",
-      "industry": "工程机械",
-      "close": 8.32,
-      "dividend_yield": 0.0601,
-      "market_cap": 719.5581,
-      "pe_ttm": 14.8103,
-      "pb": 1.2499
+      "close": 6.48,
+      "dividend_yield": 0.0586,
+      "market_cap": 935.8545,
+      "pe_ttm": 17.2419,
+      "pb": 6.544
     },
     {
       "ts_code": "600704.SH",
       "name": "物产中大",
       "industry": "仓储物流",
-      "close": 5.18,
-      "dividend_yield": 0.0598,
-      "market_cap": 267.8671,
-      "pe_ttm": 7.0514,
-      "pb": 0.6626
+      "close": 5.32,
+      "dividend_yield": 0.0583,
+      "market_cap": 275.1068,
+      "pe_ttm": 7.242,
+      "pb": 0.6805
     },
     {
-      "ts_code": "600690.SH",
-      "name": "海尔智家",
-      "industry": "家用电器",
-      "close": 20.67,
-      "dividend_yield": 0.0591,
-      "market_cap": 1938.356,
-      "pe_ttm": 9.9134,
-      "pb": 1.633
+      "ts_code": "603156.SH",
+      "name": "养元饮品",
+      "industry": "软饮料",
+      "close": 31.93,
+      "dividend_yield": 0.0583,
+      "market_cap": 402.4066,
+      "pe_ttm": 24.9631,
+      "pb": 4.4769
     },
     {
       "ts_code": "600177.SH",
       "name": "雅戈尔",
       "industry": "服饰",
-      "close": 7.44,
-      "dividend_yield": 0.0587,
-      "market_cap": 343.9841,
-      "pe_ttm": 13.2064,
-      "pb": 0.8172
+      "close": 7.52,
+      "dividend_yield": 0.0581,
+      "market_cap": 347.6828,
+      "pe_ttm": 13.3484,
+      "pb": 0.826
     },
     {
-      "ts_code": "600153.SH",
-      "name": "建发股份",
-      "industry": "仓储物流",
-      "close": 8.7,
-      "dividend_yield": 0.058,
-      "market_cap": 252.2599,
-      "pe_ttm": 12.3888,
-      "pb": 0.4577
-    },
-    {
-      "ts_code": "000921.SZ",
-      "name": "海信家电",
+      "ts_code": "600690.SH",
+      "name": "海尔智家",
       "industry": "家用电器",
-      "close": 21.37,
+      "close": 21.17,
+      "dividend_yield": 0.0577,
+      "market_cap": 1985.2442,
+      "pe_ttm": 10.1532,
+      "pb": 1.6725
+    },
+    {
+      "ts_code": "002271.SZ",
+      "name": "东方雨虹",
+      "industry": "其他建材",
+      "close": 16.08,
       "dividend_yield": 0.0575,
-      "market_cap": 295.9448,
-      "pe_ttm": 9.2872,
-      "pb": 1.6941
-    },
-    {
-      "ts_code": "000568.SZ",
-      "name": "泸州老窖",
-      "industry": "白酒",
-      "close": 103.49,
-      "dividend_yield": 0.0575,
-      "market_cap": 1523.3127,
-      "pe_ttm": 12.0493,
-      "pb": 3.1949
-    },
-    {
-      "ts_code": "601717.SH",
-      "name": "中创智领",
-      "industry": "专用机械",
-      "close": 19.58,
-      "dividend_yield": 0.0572,
-      "market_cap": 349.5813,
-      "pe_ttm": 8.1423,
-      "pb": 1.4453
-    },
-    {
-      "ts_code": "000596.SZ",
-      "name": "古井贡酒",
-      "industry": "白酒",
-      "close": 105.4,
-      "dividend_yield": 0.0569,
-      "market_cap": 557.1444,
-      "pe_ttm": 11.7766,
-      "pb": 2.2346
-    },
-    {
-      "ts_code": "601567.SH",
-      "name": "三星医疗",
-      "industry": "电气设备",
-      "close": 24.24,
-      "dividend_yield": 0.0565,
-      "market_cap": 340.6228,
-      "pe_ttm": 17.276,
-      "pb": 2.9011
-    },
-    {
-      "ts_code": "000858.SZ",
-      "name": "五粮液",
-      "industry": "白酒",
-      "close": 103.11,
-      "dividend_yield": 0.0557,
-      "market_cap": 4002.326,
-      "pe_ttm": 14.076,
-      "pb": 3.0209
-    },
-    {
-      "ts_code": "600582.SH",
-      "name": "天地科技",
-      "industry": "专用机械",
-      "close": 5.7,
-      "dividend_yield": 0.0556,
-      "market_cap": 235.8996,
-      "pe_ttm": 9.6407,
-      "pb": 0.9212
+      "market_cap": 384.1029,
+      "pe_ttm": null,
+      "pb": 1.844
     },
     {
       "ts_code": "600803.SH",
       "name": "新奥股份",
       "industry": "供气供热",
-      "close": 21.78,
-      "dividend_yield": 0.0555,
-      "market_cap": 674.262,
-      "pe_ttm": 14.4032,
-      "pb": 2.7365
+      "close": 21.15,
+      "dividend_yield": 0.0571,
+      "market_cap": 654.7586,
+      "pe_ttm": 13.9866,
+      "pb": 2.6573
     },
     {
-      "ts_code": "600015.SH",
-      "name": "华夏银行",
-      "industry": "银行",
-      "close": 7.35,
-      "dividend_yield": 0.0551,
-      "market_cap": 1169.7472,
-      "pe_ttm": 4.3005,
-      "pb": 0.3705
+      "ts_code": "600153.SH",
+      "name": "建发股份",
+      "industry": "仓储物流",
+      "close": 8.88,
+      "dividend_yield": 0.0569,
+      "market_cap": 257.479,
+      "pe_ttm": 12.6451,
+      "pb": 0.4672
+    },
+    {
+      "ts_code": "000568.SZ",
+      "name": "泸州老窖",
+      "industry": "白酒",
+      "close": 105.03,
+      "dividend_yield": 0.0567,
+      "market_cap": 1545.9806,
+      "pe_ttm": 12.2286,
+      "pb": 3.2424
+    },
+    {
+      "ts_code": "000157.SZ",
+      "name": "中联重科",
+      "industry": "工程机械",
+      "close": 8.84,
+      "dividend_yield": 0.0566,
+      "market_cap": 764.5305,
+      "pe_ttm": 15.736,
+      "pb": 1.328
+    },
+    {
+      "ts_code": "000596.SZ",
+      "name": "古井贡酒",
+      "industry": "白酒",
+      "close": 107.0,
+      "dividend_yield": 0.0561,
+      "market_cap": 565.602,
+      "pe_ttm": 11.9553,
+      "pb": 2.2685
+    },
+    {
+      "ts_code": "000921.SZ",
+      "name": "海信家电",
+      "industry": "家用电器",
+      "close": 22.03,
+      "dividend_yield": 0.0558,
+      "market_cap": 305.0849,
+      "pe_ttm": 9.5741,
+      "pb": 1.7464
     },
     {
       "ts_code": "600985.SH",
       "name": "淮北矿业",
       "industry": "煤炭开采",
-      "close": 13.69,
-      "dividend_yield": 0.0548,
-      "market_cap": 368.7071,
-      "pe_ttm": 24.4827,
-      "pb": 0.8896
+      "close": 13.48,
+      "dividend_yield": 0.0556,
+      "market_cap": 363.0513,
+      "pe_ttm": 24.1071,
+      "pb": 0.8759
     },
     {
-      "ts_code": "300628.SZ",
-      "name": "亿联网络",
-      "industry": "通信设备",
-      "close": 33.05,
-      "dividend_yield": 0.0543,
-      "market_cap": 418.6546,
-      "pe_ttm": 16.1033,
-      "pb": 4.4889
+      "ts_code": "000858.SZ",
+      "name": "五粮液",
+      "industry": "白酒",
+      "close": 104.19,
+      "dividend_yield": 0.0552,
+      "market_cap": 4044.2474,
+      "pe_ttm": 14.2234,
+      "pb": 3.0525
     },
     {
-      "ts_code": "000001.SZ",
-      "name": "平安银行",
+      "ts_code": "600015.SH",
+      "name": "华夏银行",
       "industry": "银行",
-      "close": 11.03,
+      "close": 7.42,
+      "dividend_yield": 0.0546,
+      "market_cap": 1180.8877,
+      "pe_ttm": 4.3415,
+      "pb": 0.374
+    },
+    {
+      "ts_code": "600582.SH",
+      "name": "天地科技",
+      "industry": "专用机械",
+      "close": 5.82,
+      "dividend_yield": 0.0545,
+      "market_cap": 240.8659,
+      "pe_ttm": 9.8437,
+      "pb": 0.9406
+    },
+    {
+      "ts_code": "601717.SH",
+      "name": "中创智领",
+      "industry": "专用机械",
+      "close": 20.65,
       "dividend_yield": 0.0542,
-      "market_cap": 2140.4728,
-      "pe_ttm": 5.0207,
-      "pb": 0.4744
+      "market_cap": 368.6851,
+      "pe_ttm": 8.5873,
+      "pb": 1.5243
     },
     {
-      "ts_code": "601128.SH",
-      "name": "常熟银行",
-      "industry": "银行",
-      "close": 6.98,
-      "dividend_yield": 0.0541,
-      "market_cap": 231.4932,
-      "pe_ttm": 5.5185,
-      "pb": 0.7785
+      "ts_code": "601668.SH",
+      "name": "中国建筑",
+      "industry": "建筑工程",
+      "close": 5.03,
+      "dividend_yield": 0.054,
+      "market_cap": 2078.4156,
+      "pe_ttm": 4.6532,
+      "pb": 0.431
     },
     {
       "ts_code": "601229.SH",
       "name": "上海银行",
       "industry": "银行",
-      "close": 9.66,
-      "dividend_yield": 0.0538,
-      "market_cap": 1372.5911,
-      "pe_ttm": 5.6735,
-      "pb": 0.5826
+      "close": 9.73,
+      "dividend_yield": 0.0534,
+      "market_cap": 1382.5374,
+      "pe_ttm": 5.7146,
+      "pb": 0.5868
     },
     {
-      "ts_code": "600098.SH",
-      "name": "广州发展",
-      "industry": "火力发电",
-      "close": 6.99,
-      "dividend_yield": 0.0529,
-      "market_cap": 245.06,
-      "pe_ttm": 10.6371,
-      "pb": 0.9026
+      "ts_code": "601128.SH",
+      "name": "常熟银行",
+      "industry": "银行",
+      "close": 7.07,
+      "dividend_yield": 0.0534,
+      "market_cap": 234.4781,
+      "pe_ttm": 5.5896,
+      "pb": 0.7885
+    },
+    {
+      "ts_code": "000001.SZ",
+      "name": "平安银行",
+      "industry": "银行",
+      "close": 11.22,
+      "dividend_yield": 0.0533,
+      "market_cap": 2177.344,
+      "pe_ttm": 5.1072,
+      "pb": 0.4825
+    },
+    {
+      "ts_code": "601567.SH",
+      "name": "三星医疗",
+      "industry": "电气设备",
+      "close": 26.19,
+      "dividend_yield": 0.0523,
+      "market_cap": 368.0243,
+      "pe_ttm": 18.6658,
+      "pb": 3.1345
     },
     {
       "ts_code": "000333.SZ",
       "name": "美的集团",
       "industry": "家用电器",
-      "close": 76.12,
-      "dividend_yield": 0.0527,
-      "market_cap": 5787.9254,
-      "pe_ttm": 13.1707,
-      "pb": 2.6578
+      "close": 76.73,
+      "dividend_yield": 0.0523,
+      "market_cap": 5834.4878,
+      "pe_ttm": 13.2767,
+      "pb": 2.679
     },
     {
-      "ts_code": "600642.SH",
-      "name": "申能股份",
+      "ts_code": "600098.SH",
+      "name": "广州发展",
       "industry": "火力发电",
-      "close": 8.64,
-      "dividend_yield": 0.0521,
-      "market_cap": 422.8485,
-      "pe_ttm": 10.6289,
-      "pb": 1.1513
-    },
-    {
-      "ts_code": "601838.SH",
-      "name": "成都银行",
-      "industry": "银行",
-      "close": 17.14,
-      "dividend_yield": 0.052,
-      "market_cap": 726.4678,
-      "pe_ttm": 5.4569,
-      "pb": 0.8565
-    },
-    {
-      "ts_code": "601766.SH",
-      "name": "中国中车",
-      "industry": "运输设备",
-      "close": 6.17,
+      "close": 7.13,
       "dividend_yield": 0.0519,
-      "market_cap": 1770.7199,
-      "pe_ttm": 13.4339,
-      "pb": 1.0288
+      "market_cap": 249.9682,
+      "pe_ttm": 10.8501,
+      "pb": 0.9207
+    },
+    {
+      "ts_code": "300628.SZ",
+      "name": "亿联网络",
+      "industry": "通信设备",
+      "close": 34.63,
+      "dividend_yield": 0.0519,
+      "market_cap": 438.6689,
+      "pe_ttm": 16.8731,
+      "pb": 4.7035
     },
     {
       "ts_code": "600007.SH",
       "name": "中国国贸",
       "industry": "园区开发",
-      "close": 21.28,
-      "dividend_yield": 0.0517,
-      "market_cap": 214.3497,
-      "pe_ttm": 17.8284,
-      "pb": 2.1991
+      "close": 21.34,
+      "dividend_yield": 0.0515,
+      "market_cap": 214.9541,
+      "pe_ttm": 17.8786,
+      "pb": 2.2053
+    },
+    {
+      "ts_code": "601838.SH",
+      "name": "成都银行",
+      "industry": "银行",
+      "close": 17.29,
+      "dividend_yield": 0.0515,
+      "market_cap": 732.8255,
+      "pe_ttm": 5.5047,
+      "pb": 0.864
     },
     {
       "ts_code": "600941.SH",
       "name": "中国移动",
       "industry": "电信运营",
-      "close": 93.38,
-      "dividend_yield": 0.0513,
-      "market_cap": 20220.4362,
-      "pe_ttm": 14.7492,
-      "pb": 1.4514
+      "close": 93.99,
+      "dividend_yield": 0.051,
+      "market_cap": 20352.5251,
+      "pe_ttm": 14.8456,
+      "pb": 1.4609
+    },
+    {
+      "ts_code": "601766.SH",
+      "name": "中国中车",
+      "industry": "运输设备",
+      "close": 6.29,
+      "dividend_yield": 0.0509,
+      "market_cap": 1805.1586,
+      "pe_ttm": 13.6951,
+      "pb": 1.0488
     },
     {
       "ts_code": "000895.SZ",
       "name": "双汇发展",
       "industry": "食品",
-      "close": 27.52,
-      "dividend_yield": 0.0509,
-      "market_cap": 953.4748,
-      "pe_ttm": 18.6787,
-      "pb": 4.4633
+      "close": 27.77,
+      "dividend_yield": 0.0504,
+      "market_cap": 962.1364,
+      "pe_ttm": 18.8484,
+      "pb": 4.5039
     },
     {
-      "ts_code": "601997.SH",
-      "name": "贵阳银行",
-      "industry": "银行",
-      "close": 5.71,
-      "dividend_yield": 0.0508,
-      "market_cap": 208.7689,
-      "pe_ttm": 4.0868,
-      "pb": 0.3305
+      "ts_code": "600642.SH",
+      "name": "申能股份",
+      "industry": "火力发电",
+      "close": 8.97,
+      "dividend_yield": 0.0502,
+      "market_cap": 438.9989,
+      "pe_ttm": 11.0349,
+      "pb": 1.1952
     },
     {
       "ts_code": "600919.SH",
       "name": "江苏银行",
       "industry": "银行",
-      "close": 10.79,
-      "dividend_yield": 0.0505,
-      "market_cap": 1980.1079,
-      "pe_ttm": 5.7913,
-      "pb": 0.7951
-    },
-    {
-      "ts_code": "601390.SH",
-      "name": "中国中铁",
-      "industry": "建筑工程",
-      "close": 5.2,
+      "close": 10.88,
       "dividend_yield": 0.0501,
-      "market_cap": 1283.6835,
-      "pe_ttm": 5.6076,
-      "pb": 0.4033
+      "market_cap": 1996.6241,
+      "pe_ttm": 5.8396,
+      "pb": 0.8017
     }
   ]
 }
